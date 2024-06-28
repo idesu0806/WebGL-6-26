@@ -1,43 +1,52 @@
-    <meta charset="UTF-8">
-    <title>Snow Dome</title>
-    <script src="https://unpkg.com/three@0.137.4/build/three.min.js"></script>
-    <script src="https://unpkg.com/three@0.137.4/examples/js/controls/OrbitControls.js"></script>
+<html>
+  <head>
+    <meta charset="utf-8" />
     <script type="importmap">
-        {
-          "imports": {
-            "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
-            "three/addons/": "https://unpkg.com/three@0.152.2/examples/jsm/"
-          }
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js"
         }
-      </script>
-</head>
-
-<body>
-    <script>
+      }
+    </script>
     <script type="module">
-        import * as THREE from "three";
-        import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+      import * as THREE from "three";
 
-        var init = function () {
-            var width = 800, height = 600;
-            // レンダラーを作成
-@@ -27,7 +37,7 @@
-            var camera = new THREE.PerspectiveCamera(45, width / height, 1, 1000);
-            // カメラの初期座標を設定
-            camera.position.set(1, 2, 5); //位置を指定
-            camera.lookAt(0, 0, 0); //見つめる方向
-            const controls = new OrbitControls(camera, document.body);
+      // サイズを指定
+      const width = 960;
+      const height = 540;
 
-            // 平行光源1
-            var directionalLight = new THREE.DirectionalLight(0xffffff);
-@@ -43,6 +53,10 @@
-            var directionalLight3 = new THREE.DirectionalLight(0xffffff);
-            directionalLight3.position.set(-1, 1, 1);
-            scene.add(directionalLight3);
-            // 平行光源4
-            var directionalLight4 = new THREE.DirectionalLight(0xffffff);
-            directionalLight4.position.set(0, -5, 0);
-            scene.add(directionalLight4);
+      // レンダラーを作成
+      const renderer = new THREE.WebGLRenderer({
+        canvas: document.querySelector("#myCanvas"),
+      });
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(width, height);
 
-            /*/ helper
-            const gridHelper = new THREE.GridHelper(2, 10); // size, step
+      // シーンを作成
+      const scene = new THREE.Scene();
+
+      // カメラを作成
+      const camera = new THREE.PerspectiveCamera(45, width / height);
+      camera.position.set(0, 0, +1000);
+
+      // 箱を作成
+      const geometry = new THREE.BoxGeometry(400, 400, 400);
+      const material = new THREE.MeshNormalMaterial();
+      const box = new THREE.Mesh(geometry, material);
+      scene.add(box);
+
+      tick();
+
+      // 毎フレーム時に実行されるループイベントです
+      function tick() {
+        box.rotation.y += 0.01;
+        renderer.render(scene, camera); // レンダリング
+
+        requestAnimationFrame(tick);
+      }
+    </script>
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+  </body>
+</html>
